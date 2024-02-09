@@ -1,4 +1,4 @@
-import { Link, Outlet, useLocation } from "react-router-dom"
+import { Link, Outlet, useLocation } from 'react-router-dom'
 
 export default function RootLayout() {
 
@@ -18,23 +18,23 @@ export default function RootLayout() {
   return (
     <>
       {header === 'home'
-      ? (
-        <header className='home-header'>
-          <div className="main">
-            <ul className="home-links">
-              <li><Link to="/">Home</Link></li>
-              <li><Link to="/about">About</Link></li>
-              <li><Link to="/reservation">Reservation</Link></li>
-              <li><Link to="/blog">Blog</Link></li>
-              <li><Link to="/contact">Contact Us</Link></li>
-            </ul>
-          </div>
-          <div className="home-title">
-            <h1>Alwad Alakhdar Venues</h1>
-          </div>
-        </header>
-      )
-      : (
+        ? (
+          <header className='home-header'>
+            <div className="main">
+              <ul className="home-links">
+                <li><Link to="/">Home</Link></li>
+                <li><Link to="/about">About</Link></li>
+                <li><Link to="/reservation">Reservation</Link></li>
+                <li><Link to="/blog">Blog</Link></li>
+                <li><Link to="/contact">Contact Us</Link></li>
+              </ul>
+            </div>
+            <div className="home-title">
+              <h1>Alwad Alakhdar Venues</h1>
+            </div>
+          </header>
+        )
+        : (
           <>
             <header className="full_bg">
               <div className="header">
@@ -51,19 +51,19 @@ export default function RootLayout() {
                         <div className="navbar_collapse">
                           <ul className="navbar_nav">
                             <li className="nav_item">
-                                <Link to='/' className="nav_link">Home</Link>
+                              <Link to='/' className="nav_link">Home</Link>
                             </li>
                             <li className="nav_item">
-                                <Link to='/about' className="nav_link">About</Link>
+                              <Link to='/about' className="nav_link">About</Link>
                             </li>
                             <li className="nav_item">
-                                <Link to='/reservation' className="nav_link">Reservation</Link>
+                              <Link to='/reservation' className="nav_link">Reservation</Link>
                             </li>
                             <li className="nav_item">
-                                <Link to='/blog' className="nav_link">Blog</Link>
+                              <Link to='/blog' className="nav_link">Blog</Link>
                             </li>
                             <li className="nav_item">
-                                <Link to='/contact' className="nav_link">Contact Us</Link>
+                              <Link to='/contact' className="nav_link">Contact Us</Link>
                             </li>
                           </ul>
                         </div>
@@ -90,9 +90,9 @@ export default function RootLayout() {
         <div className="footer">
           <div className="copyright">
             <div className="container copyright-text" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <p>
-                  © 2023 All Rights Reserved
-                </p>
+              <p>
+                © 2023 All Rights Reserved
+              </p>
             </div>
           </div>
         </div>

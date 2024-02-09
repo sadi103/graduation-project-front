@@ -23,7 +23,7 @@ const ContactForm = () => {
                     <button>Send</button>
                   </div>
                   <div className="social-media">
-                    
+
                   </div>
                 </div>
               </div>

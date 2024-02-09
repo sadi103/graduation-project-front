@@ -4,20 +4,20 @@ import {
   Route,
   createRoutesFromElements,
   Navigate,
-} from "react-router-dom"
-import { useState } from "react"
+} from 'react-router-dom'
+import { useState } from 'react'
 
 import './App.css'
 
 // pages
-import Home from "./pages/Home"
-import About from "./pages/About"
-import Blog from "./pages/Blog"
-import Contact from "./pages/Contact"
-import LoginRegister from "./pages/LoginRegister"
+import Home from './pages/Home'
+import About from './pages/About'
+import Blog from './pages/Blog'
+import Contact from './pages/Contact'
+import LoginRegister from './pages/LoginRegister'
 
 // layouts
-import RootLayout from "./layouts/RootLayout"
+import RootLayout from './layouts/RootLayout'
 
 const App = () => {
   const [user, setUser] = useState(null)
