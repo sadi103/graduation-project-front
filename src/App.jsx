@@ -5,19 +5,19 @@ import {
   createRoutesFromElements,
   Navigate,
 } from 'react-router-dom'
-import { useState } from 'react'
+import { Suspense, lazy, useState } from 'react'
 
 import './App.css'
 
 // pages
-import Home from './pages/Home'
-import About from './pages/About'
-import Blog from './pages/Blog'
-import Contact from './pages/Contact'
-import LoginRegister from './pages/LoginRegister'
+const Home = lazy(() => import('./pages/Home'))
+const About = lazy(() => import('./pages/About'))
+const Blog = lazy(() => import('./pages/Blog'))
+const Contact = lazy(() => import('./pages/Contact'))
+const LoginRegister = lazy(() => import('./pages/LoginRegister'))
 
 // layouts
-import RootLayout from './layouts/RootLayout'
+const RootLayout = lazy(() => import('./layouts/RootLayout'))
 
 const App = () => {
   const [user, setUser] = useState(null)
@@ -40,7 +40,9 @@ const App = () => {
   )
 
   return (
-    <RouterProvider router={router} />
+    <Suspense fallback={''}>
+      <RouterProvider router={router} />
+    </Suspense>
   )
 }
 
