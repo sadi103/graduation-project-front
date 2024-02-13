@@ -8,6 +8,8 @@ import {
 import { Suspense, lazy, useState } from 'react'
 
 import './App.css'
+import { action as loginRegisterAction } from './pages/LoginRegister'
+import { useAuthContext } from './hooks/useAuthContext'
 
 // pages
 const Home = lazy(() => import('./pages/Home'))
@@ -20,7 +22,7 @@ const LoginRegister = lazy(() => import('./pages/LoginRegister'))
 const RootLayout = lazy(() => import('./layouts/RootLayout'))
 
 const App = () => {
-  const [user, setUser] = useState(null)
+  const { user, dispatch } = useAuthContext()
 
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -29,12 +31,12 @@ const App = () => {
         <Route element={<RootLayout />}>
           <Route index element={<Home />} />
           <Route path="about" element={<About />} />
-          <Route path="reservation" element={<Navigate replace to="/login" />} />
+          <Route path="reservation" element={user ? <p>you are logged in</p> : <Navigate replace to="/login" />} />
           <Route path="blog" element={<Blog />} />
           <Route path="contact" element={<Contact />} />
         </Route>
 
-        <Route path="/login" element={<LoginRegister />} />
+        <Route path="/login" element={<LoginRegister />} action={loginRegisterAction(dispatch)} />
       </Route>
     )
   )
