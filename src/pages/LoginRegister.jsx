@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Form, redirect, useActionData } from 'react-router-dom'
+import { Form, json, redirect, useActionData } from 'react-router-dom'
 import { useAuthContext } from '../hooks/useAuthContext'
 import axios from 'axios'
 import '../form.css'
@@ -10,38 +10,53 @@ export const action = (userDispatch) => async ({ request }) => {
   const operation = formData.get('login-register')
 
   if (operation === 'login') {
-    const user = await axios
-      .post('/api/login', {
-        username: formData.get('username'),
-        password: formData.get('password')
-      })
-      .then(reponse => reponse.data)
+    try {
 
-    userDispatch({ type: 'LOGIN', payload: user })
+      const response = await axios
+        .post('/api/login', {
+          username: formData.get('username'),
+          password: formData.get('password')
+        })
 
-    return redirect('/reservation')
+      userDispatch({ type: 'LOGIN', payload: response.data })
+      return redirect('/reservation')
+
+    } catch (exception) {
+
+      return exception
+    }
+
+  }
+  else if (operation === 'register') {
+    try {
+      const response = await axios
+        .post('/api/users', {
+          name: formData.get('name'),
+          username: formData.get('username'),
+          email: formData.get('email'),
+          password: formData.get('password')
+        })
+      userDispatch({ type: 'LOGIN', payload: response.data })
+      return redirect('/reservation')
+    } catch (exception) {
+      return exception
+    }
   }
 
+  // invalid operation
+  throw json(
+    { error: 'invalid operation' }
+  )
 }
 
 const LoginRegister = () => {
   const [isLoginForm, setIsLoginForm] = useState(false)
   const { user, dispatch } = useAuthContext()
 
-  const data = useActionData()
-  console.log('data is', data)
-  console.log('user is', user)
+  const exception = useActionData()
+  console.log(exception)
 
-  // dispatch({ type: 'LOGIN', payload: data })
-
-  // const response = useActionData()
-
-  // try {
-  //   if(response.statusText === 200)
-  //     setUser(response.data)
-  // } catch (error) {
-  //   setErrorMessage(error)
-  // }
+  console.log('isLoginForm', isLoginForm)
 
   return(
     <div className="encapsulator">
@@ -56,7 +71,7 @@ const LoginRegister = () => {
               <input type="password" name="password" className="input" placeholder="Password" />
             </div>
             <button className="submit-btn" name="login-register" value="register">Sign up</button>
-            {  }
+            { exception && exception.response.data.error && (exception.config.url === '/api/users') && <p style={{ display: isLoginForm ? 'none' : '' }}>{ exception.response.data.error }</p> }
           </Form>
         </div>
         <div className={`login ${isLoginForm ? '' : 'slide-up'}`}>
@@ -68,7 +83,7 @@ const LoginRegister = () => {
                 <input type="password" name="password" className="input" placeholder="Password" />
               </div>
               <button className="submit-btn" name="login-register" value="login">Log in</button>
-              {  }
+              { exception && exception.response.data.error && (exception.config.url === '/api/login') && <p style={{ display: isLoginForm ? '' : 'none' }}>{ exception.response.data.error }</p> }
             </Form>
           </div>
         </div>
