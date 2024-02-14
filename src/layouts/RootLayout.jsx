@@ -1,10 +1,19 @@
 import { Link, Outlet, useLocation } from 'react-router-dom'
+import { useAuthContext } from '../hooks/useAuthContext'
+import { useLogout } from '../hooks/useLogout'
 
 export default function RootLayout() {
 
   const location = useLocation()
   let header = 'home'
   let currentPage = location.pathname.split('/')
+
+  const { user } = useAuthContext()
+  const logout = useLogout()
+
+  const handleLogout = () => {
+    logout()
+  }
 
   try {
     currentPage = currentPage[1]
@@ -65,6 +74,11 @@ export default function RootLayout() {
                             <li className="nav_item">
                               <Link to='/contact' className="nav_link">Contact Us</Link>
                             </li>
+                            { user && (
+                              <li className='nav_item'>
+                                <Link to='/' className='nav_link' onClick={handleLogout}>Log Out</Link>
+                              </li>
+                            ) }
                           </ul>
                         </div>
                       </nav>

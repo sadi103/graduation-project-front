@@ -44,6 +44,41 @@
 }
 
 /* Blog page styles */
+.create-blog {
+  display: flex;
+  margin: 50px auto;
+  justify-content: center;
+}
+
+.blog-creation-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.blog-buttons-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.title-input {
+  margin-bottom: 10px;
+
+}
+
+.create-button {
+  background-color: rgb(231, 112, 100);
+  height: 35px;
+  width: 150px;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  font-size: 17px;
+}
+
+.create-button:hover {
+  cursor: pointer;
+}
+
 .blog {
   padding-top: 90px;
 }

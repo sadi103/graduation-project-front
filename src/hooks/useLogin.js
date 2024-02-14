@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 import { useState } from 'react'
 import { useAuthContext } from './useAuthContext'
 import axios from 'axios'
@@ -7,13 +8,13 @@ export const useLogin = () => {
   const [loginIsLoading, setLoginIsLoading] = useState(null)
   const { dispatch } = useAuthContext()
 
-  const login = async ({ username, password }) => {
+  const login = async (data) => {
     setLoginIsLoading(true)
     setLoginError(null)
 
     try {
       const response = await axios
-        .post('/api/login', { username, password })
+        .post('/api/login', data)
 
       // save the user to local storage
       localStorage.setItem('user', JSON.stringify(response.data))
@@ -24,13 +25,13 @@ export const useLogin = () => {
       // update loading state
       setLoginIsLoading(false)
 
-      return response.statusText
+      return response.status
 
     } catch (exception) {
       setLoginIsLoading(false)
       setLoginError(exception.response.data.error)
 
-      return undefined
+      return null
     }
   }
 

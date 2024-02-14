@@ -1,74 +1,89 @@
 import { useState } from 'react'
-import { Form, json, redirect } from 'react-router-dom'
 import '../form.css'
+import { useLogin } from '../hooks/useLogin'
+import { useSignup } from '../hooks/useSignup'
+import { useNavigate } from 'react-router-dom'
 
-export const action = (singup, login) => async ({ request }) => {
-
-  const formData = await request.formData()
-  const operation = formData.get('login-register')
-
-  if (operation === 'login') {
-
-    const userToLogin = {
-      username: formData.get('username'),
-      password: formData.get('password')
-    }
-
-    const responseStatus = await login({ ...userToLogin })
-    if (responseStatus === 'OK')
-      return redirect('/reservation')
-    return undefined
-  }
-  else if (operation === 'register') {
-    const userToRegister = {
-      name: formData.get('name'),
-      username: formData.get('username'),
-      email: formData.get('email'),
-      password: formData.get('password')
-    }
-
-    const responseStatus = await singup({ ...userToRegister })
-    if (responseStatus === 'OK')
-      return redirect('/reservation')
-    return undefined
-  }
-
-  // invalid operation
-  throw json(
-    { error: 'invalid operation' }
-  )
-}
-
-const LoginRegister = ({ isLoading, error, loginIsLoading, loginError }) => {
+const LoginRegister = () => {
   const [isLoginForm, setIsLoginForm] = useState(false)
+  const navigate = useNavigate()
+
+  // states
+  const [name, setName] = useState('')
+  const [username, setUsername] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+
+  // custom hooks
+  const { login, loginIsLoading, loginError } = useLogin()
+  const { signup, isLoading, error } = useSignup()
+
+  // reset states
+  const resetValues = () => {
+    setName('')
+    setUsername('')
+    setEmail('')
+    setPassword('')
+  }
+
+  // form handlers
+  const handleRegister = async (e) => {
+    e.preventDefault()
+
+    const status = await signup({ name, username, email, password })
+    resetValues()
+
+    console.log('status is', status)
+
+    if (status === 201)
+      navigate('/reservation')
+  }
+
+  const handleLogin = async (e) => {
+    e.preventDefault()
+
+    const status = await login({ username, password })
+    resetValues()
+
+    console.log('status is', status)
+
+    if (status === 200)
+      navigate('/reservation')
+  }
+
+  // change forms
+  const changeForms = () => {
+    setIsLoginForm(!isLoginForm)
+    resetValues()
+  }
 
   return(
     <div className="encapsulator">
       <div className="form-structor">
         <div className={`signup ${isLoginForm ? 'slide-up' : ''}`}>
-          <h2 className="form-title" id="signup" onClick={() => setIsLoginForm(!isLoginForm)}><span>or</span>Sign up</h2>
-          <Form method="post" action="/login" id="register-form">
+          <h2 className="form-title" id="signup" onClick={changeForms}><span>or</span>Sign up</h2>
+          <form id="register-form" onSubmit={handleRegister}>
             <div className="form-holder">
-              <input type="text" name="name" className="input" placeholder="Name" />
-              <input type="text" name="username" className="input" placeholder="Username" />
-              <input type="email" name="email" className="input" placeholder="Email" />
-              <input type="password" name="password" className="input" placeholder="Password" />
+              <input type="text" name="name" className="input" placeholder="Name" value={name} onChange={({ target }) => setName(target.value)} />
+              <input type="text" name="username" className="input" placeholder="Username" value={username} onChange={({ target }) => setUsername(target.value)} />
+              <input type="email" name="email" className="input" placeholder="Email" value={email} onChange={({ target }) => setEmail(target.value)} />
+              <input type="password" name="password" className="input" placeholder="Password" value={password} onChange={({ target }) => setPassword(target.value)} />
             </div>
-            <button className="submit-btn" name="login-register" value="register" disabled={isLoading}>Sign up</button>
+            <button className="submit-btn" type='submit' disabled={isLoading}>{isLoading ? 'Loading...' : 'Sign up'}</button>
             { error && <p>{ error }</p> }
-          </Form>
+          </form>
         </div>
         <div className={`login ${isLoginForm ? '' : 'slide-up'}`}>
           <div className="center">
-            <h2 className="form-title" id="login" onClick={() => setIsLoginForm(!isLoginForm)}><span>or</span>Log in</h2>
-            <Form method="post" action="/login" id="login-form">
+            <h2 className="form-title" id="login" onClick={changeForms}><span>or</span>Log in</h2>
+            <form id="login-form" onSubmit={handleLogin}>
               <div className="form-holder">
-                <input type="text" name="username" className="input" placeholder="Username" />
-                <input type="password" name="password" className="input" placeholder="Password" />
+                <input type="text" name="username" className="input" placeholder="Username" value={username} onChange={({ target }) => setUsername(target.value)} />
+                <input type="password" name="password" className="input" placeholder="Password" value={password} onChange={({ target }) => setPassword(target.value)} />
               </div>
-              <button className="submit-btn" name="login-register" value="login" disabled={loginIsLoading}>Log in</button>
+              <button className="submit-btn" type='submit' disabled={loginIsLoading}>{loginIsLoading ? 'Loading...' : 'Log in'}</button>
               { loginError && <p>{ loginError }</p> }
-            </Form>
+            </form>
           </div>
         </div>
       </div>
