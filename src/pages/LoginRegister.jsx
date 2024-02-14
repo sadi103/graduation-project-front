@@ -1,46 +1,36 @@
 import { useState } from 'react'
-import { Form, json, redirect, useActionData } from 'react-router-dom'
-import { useAuthContext } from '../hooks/useAuthContext'
-import axios from 'axios'
+import { Form, json, redirect } from 'react-router-dom'
 import '../form.css'
 
-export const action = (userDispatch) => async ({ request }) => {
+export const action = (singup, login) => async ({ request }) => {
 
   const formData = await request.formData()
   const operation = formData.get('login-register')
 
   if (operation === 'login') {
-    try {
 
-      const response = await axios
-        .post('/api/login', {
-          username: formData.get('username'),
-          password: formData.get('password')
-        })
-
-      userDispatch({ type: 'LOGIN', payload: response.data })
-      return redirect('/reservation')
-
-    } catch (exception) {
-
-      return exception
+    const userToLogin = {
+      username: formData.get('username'),
+      password: formData.get('password')
     }
 
+    const responseStatus = await login({ ...userToLogin })
+    if (responseStatus === 'OK')
+      return redirect('/reservation')
+    return undefined
   }
   else if (operation === 'register') {
-    try {
-      const response = await axios
-        .post('/api/users', {
-          name: formData.get('name'),
-          username: formData.get('username'),
-          email: formData.get('email'),
-          password: formData.get('password')
-        })
-      userDispatch({ type: 'LOGIN', payload: response.data })
-      return redirect('/reservation')
-    } catch (exception) {
-      return exception
+    const userToRegister = {
+      name: formData.get('name'),
+      username: formData.get('username'),
+      email: formData.get('email'),
+      password: formData.get('password')
     }
+
+    const responseStatus = await singup({ ...userToRegister })
+    if (responseStatus === 'OK')
+      return redirect('/reservation')
+    return undefined
   }
 
   // invalid operation
@@ -49,14 +39,8 @@ export const action = (userDispatch) => async ({ request }) => {
   )
 }
 
-const LoginRegister = () => {
+const LoginRegister = ({ isLoading, error, loginIsLoading, loginError }) => {
   const [isLoginForm, setIsLoginForm] = useState(false)
-  const { user, dispatch } = useAuthContext()
-
-  const exception = useActionData()
-  console.log(exception)
-
-  console.log('isLoginForm', isLoginForm)
 
   return(
     <div className="encapsulator">
@@ -70,8 +54,8 @@ const LoginRegister = () => {
               <input type="email" name="email" className="input" placeholder="Email" />
               <input type="password" name="password" className="input" placeholder="Password" />
             </div>
-            <button className="submit-btn" name="login-register" value="register">Sign up</button>
-            { exception && exception.response.data.error && (exception.config.url === '/api/users') && <p style={{ display: isLoginForm ? 'none' : '' }}>{ exception.response.data.error }</p> }
+            <button className="submit-btn" name="login-register" value="register" disabled={isLoading}>Sign up</button>
+            { error && <p>{ error }</p> }
           </Form>
         </div>
         <div className={`login ${isLoginForm ? '' : 'slide-up'}`}>
@@ -82,8 +66,8 @@ const LoginRegister = () => {
                 <input type="text" name="username" className="input" placeholder="Username" />
                 <input type="password" name="password" className="input" placeholder="Password" />
               </div>
-              <button className="submit-btn" name="login-register" value="login">Log in</button>
-              { exception && exception.response.data.error && (exception.config.url === '/api/login') && <p style={{ display: isLoginForm ? '' : 'none' }}>{ exception.response.data.error }</p> }
+              <button className="submit-btn" name="login-register" value="login" disabled={loginIsLoading}>Log in</button>
+              { loginError && <p>{ loginError }</p> }
             </Form>
           </div>
         </div>

@@ -5,11 +5,13 @@ import {
   createRoutesFromElements,
   Navigate,
 } from 'react-router-dom'
-import { Suspense, lazy, useState } from 'react'
+import { Suspense, lazy } from 'react'
 
 import './App.css'
 import { action as loginRegisterAction } from './pages/LoginRegister'
 import { useAuthContext } from './hooks/useAuthContext'
+import { useSignup } from './hooks/useSignup'
+import { useLogin } from './hooks/useLogin'
 
 // pages
 const Home = lazy(() => import('./pages/Home'))
@@ -23,6 +25,8 @@ const RootLayout = lazy(() => import('./layouts/RootLayout'))
 
 const App = () => {
   const { user, dispatch } = useAuthContext()
+  const { signup, isLoading, error } = useSignup()
+  const { login, loginIsLoading, loginError } = useLogin()
 
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -36,7 +40,7 @@ const App = () => {
           <Route path="contact" element={<Contact />} />
         </Route>
 
-        <Route path="/login" element={<LoginRegister />} action={loginRegisterAction(dispatch)} />
+        <Route path="/login" element={<LoginRegister isLoading={isLoading} error={error} loginIsLoading={loginIsLoading} loginError={loginError} />} action={loginRegisterAction(signup, login)} />
       </Route>
     )
   )

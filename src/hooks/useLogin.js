@@ -2,18 +2,18 @@ import { useState } from 'react'
 import { useAuthContext } from './useAuthContext'
 import axios from 'axios'
 
-export const useSignup = () => {
-  const [error, setError] = useState(null)
-  const [isLoading, setIsLoading] = useState(null)
+export const useLogin = () => {
+  const [loginError, setLoginError] = useState(null)
+  const [loginIsLoading, setLoginIsLoading] = useState(null)
   const { dispatch } = useAuthContext()
 
-  const signup = async ({ name, username, email, password }) => {
-    setIsLoading(true)
-    setError(null)
+  const login = async ({ username, password }) => {
+    setLoginIsLoading(true)
+    setLoginError(null)
 
     try {
       const response = await axios
-        .post('/api/users', { name, username, email, password })
+        .post('/api/login', { username, password })
 
       // save the user to local storage
       localStorage.setItem('user', JSON.stringify(response.data))
@@ -22,16 +22,17 @@ export const useSignup = () => {
       dispatch({ type: 'LOGIN', payload: response.data })
 
       // update loading state
-      setIsLoading(false)
+      setLoginIsLoading(false)
 
       return response.statusText
+
     } catch (exception) {
-      setIsLoading(false)
-      setError(exception.response.data.error)
+      setLoginIsLoading(false)
+      setLoginError(exception.response.data.error)
 
       return undefined
     }
   }
 
-  return { signup, isLoading, error }
+  return { login, loginIsLoading, loginError }
 }
