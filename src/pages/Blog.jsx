@@ -1,4 +1,4 @@
-import Togglable from '../components/Togglable'
+import CreateBlog from '../components/CreateBlog'
 import { useAuthContext } from '../hooks/useAuthContext'
 
 const Blog = () => {
@@ -8,14 +8,7 @@ const Blog = () => {
     <>
       { user && (user.username === 'root') && (
         <div className='create-blog'>
-          <Togglable buttonLabel='create a new blog'>
-            <form>
-              <div className='blog-creation-form'>
-                <input type="text" name='title' placeholder='Title' className='title-input' />
-                <textarea name="blog_body" placeholder='Enter you thoughts' style={{ width: '1000px', height: '200px', marginBottom: '10px' }}></textarea>
-              </div>
-            </form>
-          </Togglable>
+          <CreateBlog buttonLabel='create a new blog' />
         </div>
       )}
       <div className="blog">

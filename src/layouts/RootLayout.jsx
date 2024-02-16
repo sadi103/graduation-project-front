@@ -36,6 +36,11 @@ export default function RootLayout() {
                 <li><Link to="/reservation">Reservation</Link></li>
                 <li><Link to="/blog">Blog</Link></li>
                 <li><Link to="/contact">Contact Us</Link></li>
+                { user && (
+                  <li>
+                    <Link to='/' className='nav_link' onClick={handleLogout}>Log Out</Link>
+                  </li>
+                )}
               </ul>
             </div>
             <div className="home-title">
@@ -78,7 +83,7 @@ export default function RootLayout() {
                               <li className='nav_item'>
                                 <Link to='/' className='nav_link' onClick={handleLogout}>Log Out</Link>
                               </li>
-                            ) }
+                            )}
                           </ul>
                         </div>
                       </nav>
