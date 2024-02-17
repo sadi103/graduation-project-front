@@ -7,7 +7,7 @@ module.exports = {
     'plugin:react/jsx-runtime',
     'plugin:react-hooks/recommended',
   ],
-  ignorePatterns: ['dist', '.eslintrc.cjs'],
+  // ignorePatterns: ['dist', '.eslintrc.cjs'],
   parserOptions: { ecmaVersion: 'latest', sourceType: 'module' },
   settings: { react: { version: '18.2' } },
   plugins: ['react-refresh', 'jest'],
@@ -20,7 +20,7 @@ module.exports = {
       'error',
       2,
       {
-        'switchCase' : 2
+        'SwitchCase': 1
       }
     ],
     'linebreak-style': [

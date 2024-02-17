@@ -1,6 +1,6 @@
-import axios from "axios"
-import { useState } from "react"
-import { useAuthContext } from "../hooks/useAuthContext"
+import axios from 'axios'
+import { useState } from 'react'
+import { useAuthContext } from '../hooks/useAuthContext'
 
 const CreateBlog = (props) => {
   const [visible, setVisible] = useState(false)
@@ -33,8 +33,8 @@ const CreateBlog = (props) => {
   }
 
   function roughSizeOfObject(obj) {
-    const objectString = JSON.stringify(obj);
-    return objectString.length;
+    const objectString = JSON.stringify(obj)
+    return objectString.length
   }
 
   const handleFileUpload = async ({ target }) => {
@@ -59,7 +59,7 @@ const CreateBlog = (props) => {
       const config = {
         headers: { Authorization: `Bearer ${user.token}` }
       }
-      console.log("Size of the object in memory (approximate):", roughSizeOfObject(newBlog), "bytes")
+      console.log('Size of the object in memory (approximate):', roughSizeOfObject(newBlog), 'bytes')
       console.log('this is user token', user.token)
       await axios.post('/api/blogs', newBlog, config)
     } catch (error) {
