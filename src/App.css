@@ -101,6 +101,7 @@
 
 .blog_img figure img {
   width: 100%;
+  height: auto;
 }
 
 .blog-column {
@@ -151,6 +152,17 @@
 
 .comment_padding {
   padding-left: 30px;
+}
+
+.blog-remove {
+  position: relative;
+  top: 40px;
+  left: 1100px;
+  background: url('/images/remove.png');
+  width: 32px;
+  height: 32px;
+  border: none;
+  cursor: pointer;
 }
 
 /* .image_container {

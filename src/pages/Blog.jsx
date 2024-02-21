@@ -1,47 +1,76 @@
+import axios from 'axios'
 import CreateBlog from '../components/CreateBlog'
 import { useAuthContext } from '../hooks/useAuthContext'
+import { useLoaderData } from 'react-router-dom'
+
+export const loader = async () => {
+  const response = await axios.get('/api/blogs')
+  console.log('loader fired')
+
+  return response.data
+}
 
 const Blog = () => {
   const { user } = useAuthContext()
+  const blogs = useLoaderData()
 
-  return (
-    <>
-      { user && (user.username === 'root') && (
-        <div className='create-blog'>
-          <CreateBlog buttonLabel='create a new blog' />
-        </div>
-      )}
-      <div className="blog">
-        <div className="container">
-          <div className="blog-column">
-            <div className="blog_container">
-              <div className="blog_bg">
-                <div className="row d_flex">
-                  <div className="image_container">
-                    <div className="blog_img">
-                      <figure>
-                        <img src="/images/blog_img1.jpg" alt="#" />
-                      </figure>
-                    </div>
-                  </div>
-                  <div className="blog_text">
-                    <div className="marriage_text">
-                      <h3>Tempor incididunt ut labore et dolore</h3>
-                      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore</p>
-                      <h4>
-                        <strong>Like</strong>
-                        <strong className="comment_padding">Comment</strong>
-                      </h4>
+  console.log('blogs using useLoaderData', blogs)
+
+  const handleDeletion = (blogId) => async () => {
+    const config = {
+      headers: { Authorization: `Bearer ${user.token}` },
+    }
+
+    try {
+      await axios.delete(`/api/blogs/${blogId}`, config)
+    } catch(exception) {
+      console.log('exception raised after blog deletion attempt is:', exception.response.data.error)
+    }
+  }
+
+  if (blogs) {
+    return (
+      <>
+        { user && (user.username === 'root') && (
+          <div className='create-blog'>
+            <CreateBlog buttonLabel='create a new blog' />
+          </div>
+        )}
+        <div className="blog">
+          <div className="container">
+            { blogs && blogs.map(blog => (
+              <div key={blog.id} className="blog-column">
+                <div className="blog_container">
+                  <button onClick={handleDeletion(blog.id)} className='blog-remove'></button>
+                  <div className="blog_bg">
+                    <div className="row d_flex">
+                      <div className="image_container">
+                        <div className="blog_img">
+                          <figure>
+                            <img src={ blog.image } alt="#" />
+                          </figure>
+                        </div>
+                      </div>
+                      <div className="blog_text">
+                        <div className="marriage_text">
+                          <h3>{ blog.title }</h3>
+                          <p>{ blog.body }</p>
+                          <h4>
+                            <strong>Like</strong>
+                            <strong className="comment_padding">Comment</strong>
+                          </h4>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
+            )) }
           </div>
         </div>
-      </div>
-    </>
-  )
+      </>
+    )
+  }
 }
 
 export default Blog
