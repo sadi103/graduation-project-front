@@ -10,6 +10,8 @@ import { Suspense, lazy } from 'react'
 import './App.css'
 import { useAuthContext } from './hooks/useAuthContext'
 import { loader as blogsLoader } from './pages/Blog'
+import { loader as reservationLoader } from './pages/Reservation'
+// import Reservation from './pages/Reservation'
 
 // pages
 const Home = lazy(() => import('./pages/Home'))
@@ -17,6 +19,8 @@ const About = lazy(() => import('./pages/About'))
 const Blog = lazy(() => import('./pages/Blog'))
 const Contact = lazy(() => import('./pages/Contact'))
 const LoginRegister = lazy(() => import('./pages/LoginRegister'))
+const Reservation = lazy(() => import('./pages/Reservation'))
+const ReservationErrorPage = lazy(() => import('./pages/ReservationErrorPage'))
 
 // layouts
 const RootLayout = lazy(() => import('./layouts/RootLayout'))
@@ -33,7 +37,7 @@ const App = () => {
         <Route element={<RootLayout />}>
           <Route index element={<Home />} loader={blogsLoader} />
           <Route path="about" element={<About />} />
-          <Route path="reservation" element={user ? <p>you are logged in</p> : <Navigate replace to="/login" />} />
+          <Route path="reservation" element={user ? <Reservation /> : <Navigate replace to="/login" />} loader={user ? () => reservationLoader(user.token) : () => null} errorElement={<ReservationErrorPage />} />
           <Route path="blog" element={<Blog />} loader={blogsLoader} />
           <Route path="contact" element={<Contact />} />
         </Route>
