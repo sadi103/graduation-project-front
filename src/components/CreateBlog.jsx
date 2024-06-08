@@ -90,7 +90,7 @@ const CreateBlog = (props) => {
             </div>
             <div>
               <button className='create-button' type='submit' style={{ marginRight: '5px' }}>Create</button>
-              <button className='create-button' onClick={toggleVisibility}>Cancel</button>
+              <button className='create-button' type='button' onClick={toggleVisibility}>Cancel</button>
             </div>
           </div>
         </form>

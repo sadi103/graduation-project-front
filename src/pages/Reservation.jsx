@@ -3,6 +3,8 @@ import { useState } from 'react'
 import { useLoaderData } from 'react-router-dom'
 import { useAuthContext } from '../hooks/useAuthContext'
 
+import '../table.css'
+
 export const loader = async (token) => {
   const config = {
     headers: { Authorization: `Bearer ${token}` }
@@ -59,9 +61,41 @@ const Reservation = () => {
         appointment => <p key={appointment.id}>{appointment.date}</p>
       ))} */}
 
-      {(appointments && appointments.map(
+      {/* {(appointments && appointments.map(
         appointment => <p key={appointment.id}>{appointment.date}</p>
-      ))}
+      ))} */}
+
+      {(appointments ?
+        <div className='table'>
+          <table>
+            <thead>
+              <tr>
+                <th>No.</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Date</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {
+                appointments.map(
+                  appointment =>
+                    <tr key={appointment.id}>
+                      <td>1</td>
+                      <td>{appointment.userId.name}</td>
+                      <td>{appointment.userId.email}</td>
+                      <td>{appointment.date}</td>
+                      <td>
+                        <button><i className="fa-solid fa-trash"></i></button>
+                      </td>
+                    </tr>
+                )
+              }
+            </tbody>
+          </table>
+        </div> : null
+      )}
     </>
   )
 }
