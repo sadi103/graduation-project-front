@@ -5,7 +5,6 @@ import { useLoaderData } from 'react-router-dom'
 
 export const loader = async () => {
   const response = await axios.get('/api/blogs')
-  console.log('loader fired')
 
   return response.data
 }
@@ -13,8 +12,6 @@ export const loader = async () => {
 const Blog = () => {
   const { user } = useAuthContext()
   const blogs = useLoaderData()
-
-  console.log('blogs using useLoaderData', blogs)
 
   const handleDeletion = (blogId) => async () => {
     const config = {
@@ -55,10 +52,6 @@ const Blog = () => {
                         <div className="marriage_text">
                           <h3>{ blog.title }</h3>
                           <p>{ blog.body }</p>
-                          <h4>
-                            <strong>Like</strong>
-                            <strong className="comment_padding">Comment</strong>
-                          </h4>
                         </div>
                       </div>
                     </div>

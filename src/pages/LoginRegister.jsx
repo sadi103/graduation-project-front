@@ -33,8 +33,6 @@ const LoginRegister = () => {
     const status = await signup({ name, username, email, password })
     resetValues()
 
-    console.log('status is', status)
-
     if (status === 201)
       navigate('/reservation')
   }
@@ -44,8 +42,6 @@ const LoginRegister = () => {
 
     const status = await login({ username, password })
     resetValues()
-
-    console.log('status is', status)
 
     if (status === 200)
       navigate('/reservation')

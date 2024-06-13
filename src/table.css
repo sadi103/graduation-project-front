@@ -1,6 +1,5 @@
 .table {
   width: 100%;
-  height: 650;
   overflow: auto;
   margin-top: 50px;
 }
@@ -10,9 +9,29 @@ button {
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  padding: 10px;
+  padding: 10px 20px;
   color: #ffffff;
   background-color: #f80000;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #c60000;
+}
+
+.delete-button {
+  outline: none;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  padding: 6px 10px;
+  color: #ffffff;
+  background-color: #f80000;
+  transition: background-color 0.3s ease;
+}
+
+.delete-button:hover {
+  background-color: #c60000;
 }
 
 table {
@@ -35,4 +54,44 @@ th, td {
   padding: 10px 20px;
   word-break: break-all;
   text-align: center;
+}
+
+/* reservation form */
+#appointment-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background-color: #f6f9fc;
+  border-radius: 10px;
+  max-width: 400px;
+  margin: 50px auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#appointment-form input[type="datetime-local"] {
+  outline: none;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 10px;
+  margin-bottom: 20px;
+  font-size: 16px;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+}
+
+#appointment-form input[type="datetime-local"]:focus {
+  border-color: #007bff;
+}
+
+#appointment-form button {
+  width: 100%;
+  margin-top: 10px;
+}
+
+#appointment-form .error-message {
+  color: #f80000;
+  margin-top: 10px;
+  font-size: 14px;
 }

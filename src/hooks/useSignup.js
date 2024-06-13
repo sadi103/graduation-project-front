@@ -30,7 +30,6 @@ export const useSignup = () => {
     } catch (exception) {
       setIsLoading(false)
       setError(exception.response.data.error)
-      console.log('exception from useSignup file', exception)
 
       return null
     }

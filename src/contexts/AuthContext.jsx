@@ -21,8 +21,6 @@ const AuthContextProvider = ({ children }) => {
     user: potentialUser ? potentialUser : null
   })
 
-  console.log('AuthContext state:', state)
-
   return (
     <AuthContext.Provider value={{ ...state, dispatch }}>
       { children }

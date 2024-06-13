@@ -18,7 +18,7 @@ const ContactForm = () => {
       email: email,
       message: message
     })
-      .then(response => console.log(response))
+      .then(response => console.log('email was successfully sent with status code', response.status))
       .catch(error => console.log(error))
 
     setEmail('')

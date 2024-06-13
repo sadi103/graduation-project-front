@@ -40,8 +40,6 @@ const CreateBlog = (props) => {
   const handleFileUpload = async ({ target }) => {
     const file = target.files[0]
     const base64 = await toBase64(file)
-    console.log('this is the image converted to base64', base64)
-    console.log('and this is the type of the data', typeof(base64))
 
     setImage(base64)
   }
@@ -59,8 +57,6 @@ const CreateBlog = (props) => {
       const config = {
         headers: { Authorization: `Bearer ${user.token}` }
       }
-      console.log('Size of the object in memory (approximate):', roughSizeOfObject(newBlog), 'bytes')
-      console.log('this is user token', user.token)
       await axios.post('/api/blogs', newBlog, config)
     } catch (error) {
       console.log('Error triggered after trying to upload:', error)

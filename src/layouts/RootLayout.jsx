@@ -25,7 +25,7 @@ export default function RootLayout() {
   }
 
   return (
-    <>
+    <div className="site-container">
       {header === 'home'
         ? (
           <header className='home-header'>
@@ -101,7 +101,7 @@ export default function RootLayout() {
         )
       }
 
-      <main>
+      <main className="content">
         <Outlet />
       </main>
 
@@ -116,6 +116,6 @@ export default function RootLayout() {
           </div>
         </div>
       </footer>
-    </>
+    </div>
   )
 }

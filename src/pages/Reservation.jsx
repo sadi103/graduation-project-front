@@ -1,24 +1,28 @@
 import axios from 'axios'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useLoaderData } from 'react-router-dom'
 import { useAuthContext } from '../hooks/useAuthContext'
 
 import '../table.css'
 
-export const loader = async (token) => {
-  const config = {
-    headers: { Authorization: `Bearer ${token}` }
-  }
-  const response = await axios.get('/api/appointments', config)
-
-  return response.data
-}
-
 const Reservation = () => {
   const { user } = useAuthContext()
 
-  const appointments = useLoaderData()
-  console.log('these are the appointments', appointments)
+  const [appointments, setAppointments] = useState(null)
+
+  useEffect(() => async () => {
+    const config = {
+      headers: { Authorization: `Bearer ${user.token}` }
+    }
+
+    try {
+      const response = await axios.get('/api/appointments', config)
+      setAppointments(response.data)
+    } catch(exception) {
+      setReservationError(exception.response.data)
+    }
+  }, [])
+
   const [appointmentDate, setAppointmentDate] = useState('')
   const [reservationError, setReservationError] = useState(null)
 
@@ -32,40 +36,42 @@ const Reservation = () => {
         headers: { Authorization: `Bearer ${user.token}` }
       }
       const newDate = { date: appointmentDate }
-      console.log('this is the appointment data sent to the backend', newDate)
       const status = await axios.post('/api/appointments', newDate, config)
-      console.log('this is the data', status.data)
+      setAppointments(status.data)
 
     } catch (exception) {
 
-      console.log('Error fired from reservation form', exception)
       setReservationError(exception.response.data.error)
 
     }
   }
 
-  return (
-    <>
-      {Array.isArray(appointments) && !appointments.length && // Basically if appointments is an array and empty, return a form to make an appointment
-        <div>
-          <form id="appointment-form" onSubmit={handleReservation}>
-            <input type="datetime-local" onChange={({ target }) => setAppointmentDate(target.value)} />
-            <button type="submit">make a reservation</button>
-            <br />
-            {reservationError}
-          </form>
-        </div>
+  const handleDeletion = (id) => async () => {
+
+    try {
+      const config = {
+        headers: { Authorization: `Bearer ${user.token}` }
       }
 
-      {/* {(appointments && (typeof appointments === 'object') && <p>{appointments.date}</p>) || (appointments && appointments.map(
-        appointment => <p key={appointment.id}>{appointment.date}</p>
-      ))} */}
+      const status = await axios.delete(`/api/appointments/${id}`, config)
+      setAppointments(appointments.filter(appointment => appointment.id !== id))
+    } catch (exception) {
+      console.log('Error fired from trying to delete a reservation', exception)
+    }
+  }
 
-      {/* {(appointments && appointments.map(
-        appointment => <p key={appointment.id}>{appointment.date}</p>
-      ))} */}
+  const options = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  }
 
-      {(appointments ?
+  if (appointments && appointments.length) {
+
+    return (
+      <>
         <div className='table'>
           <table>
             <thead>
@@ -80,22 +86,37 @@ const Reservation = () => {
             <tbody>
               {
                 appointments.map(
-                  appointment =>
+                  (appointment, index) =>
                     <tr key={appointment.id}>
-                      <td>1</td>
+                      <td>{index + 1}</td>
                       <td>{appointment.userId.name}</td>
                       <td>{appointment.userId.email}</td>
-                      <td>{appointment.date}</td>
+                      <td>{new Date(appointment.date).toLocaleString('en-US', options)}</td>
                       <td>
-                        <button><i className="fa-solid fa-trash"></i></button>
+                        <button className="delete-button" onClick={handleDeletion(appointment.id)}><i className="fa-solid fa-trash"></i></button>
                       </td>
                     </tr>
                 )
               }
             </tbody>
           </table>
-        </div> : null
-      )}
+        </div>
+      </>
+    )
+  }
+
+  return (
+    <>
+      {Array.isArray(appointments) && !appointments.length && user.username !== 'root' && // Basically if appointments is an array and empty, return a form to make an appointment
+        <div>
+          <form id="appointment-form" onSubmit={handleReservation}>
+            <input type="datetime-local" onChange={({ target }) => setAppointmentDate(target.value)} />
+            <button type="submit">make a reservation</button>
+            <br />
+            {reservationError && <div className="error-message">{reservationError}</div>}
+          </form>
+        </div>
+      }
     </>
   )
 }
